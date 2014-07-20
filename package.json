@@ -1,0 +1,59 @@
+{
+  "name": "slush-lib",
+  "version": "0.1.0",
+  "description": "slush node + mocha + chai + github + travis + npm",
+  "keywords": [
+    "slushgenerator",
+    "travis",
+    "mocha",
+    "chai",
+    "github",
+    "node",
+    "npm",
+    "module"
+  ],
+  "homepage": "https://github.com/parroit/slush-lib",
+  "bugs": {
+    "url": "https://github.com/parroit/slush-lib/issues"
+  },
+  "author": {
+    "name": "Andrea Parodi",
+    "email": "andrea.parodi@ebansoftware.net"
+    
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/parroit/slush-lib.git"
+  },
+  "main": "slushfile.js",
+  "scripts": {},
+  "dependencies": {
+    "gulp": "~3.8.6",
+    "gulp-template": "~0.1.1",
+    "gulp-install": "~0.1.8",
+    "gulp-conflict": "~0.1.2",
+    "gulp-rename": "~1.2.0",
+    "underscore.string": "~2.3.3",
+    "inquirer": "~0.5.1",
+    "git-config": "0.0.6",
+    "octonode": "~0.6.3",
+    "git-exec": "~0.2.1",
+    "bluebird": "~2.2.2",
+    "git-credential": "^1.0.1",
+    "npm-exists": "^0.1.0",
+    "gulp-util": "^3.0.0",
+    "travis-ci": "^1.2.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=0.10.26",
+    "npm": ">=1.4.3"
+  },
+  "readmeFilename": "README.md"
+}
