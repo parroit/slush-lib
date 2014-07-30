@@ -258,10 +258,12 @@ function createTravisProject(slug, githubConfig) {
             return reposPromise
                 .then(function(results){
                     if (results.repos.length === 0) {
-                        if (retry === 5) {
+                        if (retry === 10) {
                             throw new Error('unable to find repo after 5 retry');
                         }
-                        return findRepo(retry + 1);
+                        return  Promise.delay(1000 * retry).then(function(){
+                            return findRepo(retry + 1);
+                        });
                     }
                     console.log('Travis successfully retrieved repo from Github');
                     return results.repos[0];
