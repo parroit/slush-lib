@@ -1,8 +1,5 @@
-/*
- * slush-node
- * https://github.com/chrisenytc/slush-node
- *
- * Copyright (c) 2014, Christopher EnyTC
+/**
+ * Copyright (c) 2014, Andrea Parodi
  * Licensed under the MIT license.
  */
 
@@ -23,6 +20,7 @@ var Promise = require('bluebird');
 var exists = require('npm-exists');
 var gulpUtil = require('gulp-util');
 var Travis = require('travis-ci');
+Promise.longStackTraces();
 
 var travis = new Travis({
     version: '2.0.0'
@@ -112,13 +110,13 @@ function createRemoteRepo(answers, githubConfig) {
     var createRepo = Promise.promisify(ghme.repo, ghme);
 
     return createRepo({
-            'name': answers.appNameSlug,
-            'description': answers.appDescription,
-        })
+        'name': answers.appNameSlug,
+        'description': answers.appDescription,
+    })
 
-        .then(function(repo) {
-            return 'Remote repository created ' + repo[0].full_name;
-        });
+    .then(function(repo) {
+        return 'Remote repository created ' + repo[0].full_name;
+    });
 
 }
 
@@ -182,10 +180,35 @@ function validateAppName(appName) {
 
 function askOptionToUser(gitConfig) {
     var prompts = [{
+        name: 'githubPublished',
+        message: 'source will be hosted on GitHub?',
+        type: 'confirm',
+        default: true
+    }, {
+        name: 'npmPublished',
+        message: 'will be published on NPM?',
+        type: 'confirm',
+        default: true
+    }, {
+        name: 'travisTested',
+        message: 'will be tested on Travis?',
+        type: 'confirm',
+        default: true
+    }, {
         name: 'appName',
         message: 'module name?',
         default: path.basename(process.cwd()),
-        validate: validateAppName
+        validate: validateAppName,
+        when: function(answers) {
+            return answers.npmPublished;
+        }
+    }, {
+        name: 'appName',
+        message: 'module name?',
+        default: path.basename(process.cwd()),
+        when: function(answers) {
+            return !answers.npmPublished;
+        }
     }, {
         name: 'appDescription',
         message: 'description?'
@@ -247,23 +270,24 @@ function createTravisProject(slug, githubConfig) {
             throw new Error('unable to synchronize your Travis account');
         }
 
-        function findRepo(retry){
-            console.log('Travis retrieving repo from Github ' + (retry ? (retry + 'retry ') : '') );
+        function findRepo(retry) {
+            console.log('Travis retrieving repo from Github ' + (retry ? (retry + 'retry ') : ''));
             var repos = Promise.promisify(travis.repos, travis);
 
             var reposPromise = repos({
                 slug: slug
-            });    
+            });
 
             return reposPromise
-                .then(function(results){
+                .then(function(results) {
                     if (results.repos.length === 0) {
                         if (retry === 10) {
                             throw new Error('unable to find repo after 5 retry');
                         }
-                        return  Promise.delay(1000 * retry).then(function(){
+                        return Promise.delay(1000 * retry).then(function() {
                             return findRepo(retry + 1);
                         });
+
                     }
                     console.log('Travis successfully retrieved repo from Github');
                     return results.repos[0];
@@ -296,7 +320,7 @@ function createTravisProject(slug, githubConfig) {
 
 gulp.task('default', function(done) {
 
-    Promise.longStackTraces();
+
 
     var slug;
     var githubConfig;
@@ -304,37 +328,58 @@ gulp.task('default', function(done) {
 
 
     readGitConfig(path.join(getUserHome(), '.gitconfig'))
-        
-        .then(function(gitConfig) {
-            return credential()
-                .then(function(data) {
-                    gitConfig.credential = data;
-                    return (githubConfig = gitConfig);
-                });
-        })
-        
-        .then(askOptionToUser)
 
-        .then(function(answers) {
-            slug = answers.userName + '/' + answers.appNameSlug;
-            return Promise.all([
-                createLocalRepo(answers),
-                createRemoteRepo(answers, githubConfig),
-                installSlushTemplate(answers)
-            ]);
+    .then(function(gitConfig) {
+
+        return credential()
+            .then(function(data) {
+                gitConfig.credential = data;
+                return (githubConfig = gitConfig);
+            }).catch(function() {
+                console.log('GitHub credentials not found.');
+                return (githubConfig = gitConfig);
+            });
+    })
+
+    .then(askOptionToUser)
+
+    .then(function(answers) {
+        slug = answers.userName + '/' + answers.appNameSlug;
+
+        var slushOps = [Promise.resolve(answers)];
+
+        slushOps.push(createLocalRepo(answers));
+
+        if (answers.githubPublished) {
+            slushOps.push(
+                createRemoteRepo(answers, githubConfig)
+            );
+        }
+
+        slushOps.push(installSlushTemplate(answers));
+
+        return Promise.all(slushOps);
 
 
-        })
+    })
 
-        .then(function(results) {
+    .then(function(results) {
+        var answers = results[0];
+        if (answers.travisTested) {
             return createTravisProject(slug, githubConfig)
                 .then(function() {
                     results.push('Module activated on Travis');
                     return results;
                 });
-        })
+        } else {
+            return results;
+        }
 
-        .then(function(results) {
+    })
+
+    .then(function(results) {
+        var answers = results[0];
+        if (answers.githubPublished) {
             return gitAddAll()
                 .then(gitCommitSkeleton)
                 .then(gitPush)
@@ -342,24 +387,30 @@ gulp.task('default', function(done) {
                     results.push('Skeleton committed and pushed to github');
                     return results;
                 });
-        })
+        } else {
+            return gitAddAll()
+                .then(gitCommitSkeleton)
+                .then(function() {
+                    results.push('Skeleton committed');
+                    return results;
+                });
+        }
+    })
 
-        .then(function(results) {
-            console.dir(results);
+    .then(function(results) {
+        results.splice(0, 1);
+        console.dir(results);
 
-        })
+    })
 
-        .then(done)
+    .then(done)
 
-        .catch(function(err) {
+    .catch(function(err) {
 
-            console.error(err);
-        });
+        console.error(err);
+    });
 
 
 
 
 });
-
-
-
