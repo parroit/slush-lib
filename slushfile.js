@@ -5,21 +5,22 @@
 
 'use strict';
 
-var gulp = require('gulp');
-var install = require('gulp-install');
+var gulp     = require('gulp');
+var install  = require('gulp-install');
 var conflict = require('gulp-conflict');
 var template = require('gulp-template');
-var rename = require('gulp-rename');
-var _ = require('underscore.string');
+var rename   = require('gulp-rename');
 var inquirer = require('inquirer');
-var path = require('path');
-
-var git = require('git-exec');
-var github = require('octonode');
-var Promise = require('bluebird');
-var exists = require('npm-exists');
+var path     = require('path');
+var utility  = require('./Utility');
+var git      = require('git-exec');
+var github   = require('octonode');
+var Promise  = require('bluebird');
+var exists   = require('npm-exists');
 var gulpUtil = require('gulp-util');
-var Travis = require('travis-ci');
+var Travis   = require('travis-ci');
+var _        = require('lodash');
+var _s       = require('underscore.string');
 Promise.longStackTraces();
 
 var travis = new Travis({
@@ -233,7 +234,7 @@ function askOptionToUser(gitConfig) {
     return new Promise(function(resolve) {
         inquirer.prompt(prompts, function(answers) {
 
-            answers.appNameSlug = _.slugify(answers.appName);
+            answers.appNameSlug = _s.slugify(answers.appName);
             answers.appNameJs = normalize(answers.appName);
             var d = new Date();
             answers.year = d.getFullYear();
@@ -414,3 +415,5 @@ gulp.task('default', function(done) {
 
 
 });
+
+gulp.task('module', require('./generators/module'));
