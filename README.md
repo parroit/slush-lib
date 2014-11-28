@@ -92,12 +92,12 @@ You can bypass the prompts by simply passing --flags instead.
 ```bash
 lib:module <name>  --path --pattern --private --public
 ```
-**`Path`**: Will set the path where you would like to module to be placed.
+**Path**: Will set the path where you would like to module to be placed.
 ```bash
 --path ./lib/somePath
 ```
 
-**`Pattern`**: Will Set the Pattern Type.
+**Pattern**: Will Set the Pattern Type.
 ```bash
 --pattern
 ```
