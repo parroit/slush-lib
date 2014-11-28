@@ -44,6 +44,7 @@ This Generator comes with the following out of the box
  - **Github** account integration.
  - **Travis** account Integration.
  - **npm** account integration.
+
 ****
 
 #Sub-Generators
@@ -53,7 +54,7 @@ This Generator comes with the following out of the box
 
 The module sub-generator will create a new node-module in the requested directory. You will also be prompted for the type of pattern you would like to use in the module.
 
-**The Module Sub-Generator also comes with a test file in tests/ **
+The Module Sub-Generator also comes with a test file in tests/
 
 In order to create a new module run the following command.
 
@@ -102,20 +103,25 @@ lib:module <name>  --path --pattern --private --public
 ```
 
 
-**Private**: Will will create private functions within your module
+**Private**: Will create private functions within your module
+
 **NOTE** If you are passing multiple function names, please comma separate them with **NO SPACES**
 
 ```bash
 --private one,two,three
 ```
 
-**Public**: Will will create Public API functions for your module.
+**Public**: Will create Public API functions for your module.
+
 **NOTE** If you are passing multiple function names, please comma separate them with **NO SPACES**
 
 ```bash
 --public one,two,three
 ```
-
+Or use a string
+```bash
+--public 'one,two,three'
+```
 
 ## Getting To Know Slush
 
