@@ -30,6 +30,7 @@ var readGitConfig = Promise.promisify(require('git-config'));
 var credential = Promise.promisify(require('git-credential'));
 var gitExec;
 
+gulp.storage.create('store', 'lib-config.json');
 
 
 Promise.promisifyAll(github);
@@ -74,6 +75,7 @@ function getUserHome() {
 
 function installSlushTemplate(answers) {
     var files = [__dirname + '/templates/**'];
+
 
     return new Promise(function(resolve, reject) {
         gulp.src(files)
@@ -325,7 +327,7 @@ gulp.task('default', function(done) {
 
     var slug;
     var githubConfig;
-
+    var _this = this;
 
 
     readGitConfig(path.join(getUserHome(), '.gitconfig'))
@@ -398,7 +400,16 @@ gulp.task('default', function(done) {
         }
     })
 
+    /**
+     * Store information in storage;
+     */
+    .then(function ( results ){
+        _this.storage.store(results[0]);
+        return results;
+    })
+
     .then(function(results) {
+
         results.splice(0, 1);
         console.dir(results);
 
