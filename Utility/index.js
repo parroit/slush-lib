@@ -1,10 +1,10 @@
 (function(){
   'use strict';
 
-  var gulp = require('gulp');
-  var finder = require('gulp-finder')(gulp);
   var parseArgs = require('minimist');
-
+  var gulp      = require('gulp');
+  var finder    = require('gulp-finder')(gulp);
+  var storage   = require('gulp-storage')(gulp);
 
   var utility = new Utility;
   module.exports = utility;
@@ -21,7 +21,9 @@
 
     _this.gulpInst = gulp;
     _this.args = parseArgs(process.argv.slice(2));
+
     _this.gulpInst.Gulp.prototype.argv = _this.args;
+    // _this.gulpInst.Gulp.prototype.storage = storage;
   }
 
   /**
