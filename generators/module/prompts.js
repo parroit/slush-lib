@@ -12,7 +12,7 @@ module.exports = function(){
           type: 'input',
           name: 'path',
           message: 'Where should I put this module?',
-          default: './'
+          default: './lib'
         },
         pattern: {
             type:'list',

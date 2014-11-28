@@ -14,7 +14,10 @@
     var _this = this,
         root = path.join(__dirname, 'templates'),
         templates = _this.finder(root),
-        filters = {}
+        config = _this.storage.get();
+
+        config.filters = {}
+        config.filters.generator = this.seq[0];
 
 
     if(_this.args[0]){
@@ -29,12 +32,12 @@
 
         if( _.isString( item ) ){
 
-            var array = filters[key] = item.split(',');
+            var array = config.filters[key] = item.split(',');
             if(array.length > 1) return array;
 
         }
 
-        filters[key] = item;
+        config.filters[key] = item;
 
     });
 
@@ -46,34 +49,48 @@
 
 
     inquirer.prompt(prompts, function (answers){
-      _.assign(filters, answers)
-      if(answers.private) filters.private = answers.private.split(',');
-      if(answers.public) filters.public = answers.public.split(',');
+      _.assign(config.filters, answers)
+      if(answers.private) config.filters.private = answers.private.split(',');
+      if(answers.public) config.filters.public = answers.public.split(',');
       next();
     })
 
     function next(){
-      filters.names = {
-        classed: _s.classify(filters.name),
-        slug:    _s.slugify(filters.name)
+      config.filters.names = {
+        classed: _s.classify(config.filters.name),
+        slug:    _s.slugify(config.filters.name)
       }
-      generate();
+      config.filters.testPath = './test'
+      generate_module();
+      generate_test();
     }
 
-    function generate(){
+    function generate_module(){
 
-      gulp.src( templates[filters.pattern].all() )
-        .pipe( $.template( filters ) )
+      gulp.src( templates[config.filters.pattern].all() )
+        .pipe( $.template( config ) )
         .pipe( $.rename(function (file){
             if (file.basename.indexOf('_') == 0) {
-              file.basename = file.basename.replace('_', filters.name);
+              file.basename = file.basename.replace('_', config.filters.name);
             }
         }) )
-        .pipe( $.conflict( filters.path ) )
-        .pipe( gulp.dest( filters.path ) )
+        .pipe( $.conflict( config.filters.path ) )
+        .pipe( gulp.dest( config.filters.path ) )
+
+    }
+    function generate_test(){
+
+      gulp.src( templates.test.all() )
+        .pipe( $.template( config ) )
+        .pipe( $.rename(function (file){
+            if (file.basename.indexOf('_') == 0) {
+              file.basename = file.basename.replace('_', config.filters.name);
+            }
+        }) )
+        .pipe( $.conflict( config.filters.testPath ) )
+        .pipe( gulp.dest( config.filters.testPath ) )
         .on('end', function(){
-          process.exit()
-          done();
+          process.exit();
         })
     }
   }
