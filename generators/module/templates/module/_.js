@@ -1,6 +1,6 @@
 (function(){
 /*
-   * <%= names.classed %>
+   * <%= filters.names.classed %>
    * https://github.com/<%= userName %>/<%= appNameSlug %>
    *
    * Copyright (c) 2014 <%= userName %>
@@ -9,10 +9,10 @@
 
   'use strict';
 
-  var <%= names.classed %> = module.exports = (function () {
-    var <%= names.slug %> = {};
+  var <%= filters.names.classed %> = module.exports = (function () {
+    var <%= filters.names.slug %> = {};
 
-    <% _.forEach(private, function (item){ %>
+    <% _.forEach(filters.private, function (item){ %>
     /**
      * [<%=item%> description]
      * @param  {[type]}   params   [description]
@@ -23,18 +23,18 @@
 
     }<%})%>
 
-    <% _.forEach(public, function (item){ %>
+    <% _.forEach(filters.public, function (item){ %>
     /**
      * [<%=item%> description]
      * @param  {[type]}   params   [description]
      * @param  {Function} callback [description]
      * @return {[type]}            [description]
      */
-    <%= names.slug %>.<%=item%> = function( params, callback ){
+    <%= filters.names.slug %>.<%=item%> = function( params, callback ){
 
     };<%})%>
 
-    return <%= names.slug %>;
+    return <%= filters.names.slug %>;
   }());
 
 
