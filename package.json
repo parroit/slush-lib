@@ -38,6 +38,7 @@
     "git-credential": "^1.0.1",
     "git-exec": "~0.2.1",
     "gulp": "~3.8.6",
+    "gulp-command": "^0.1.1",
     "gulp-conflict": "~0.1.2",
     "gulp-finder": "^1.0.2",
     "gulp-install": "~0.1.8",

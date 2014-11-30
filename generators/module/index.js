@@ -1,7 +1,15 @@
 (function(){
-  'use strict'
+/*
+   * Module
+   * https://github.com/joelcoxokc/slush-lib
+   *
+   * Copyright (c) 2014 joelcoxokc
+   * Licensed under the MIT license.
+   */
 
-  var questions = require('./prompts'),
+  'use strict';
+
+   var questions = require('./prompts'),
       inquirer  = require('inquirer'),
       path      = require('path'),
       gulp      = require('gulp'),
@@ -10,89 +18,114 @@
       $         = require('gulp-load-plugins')({lazy:false});
 
 
-  module.exports = function( done ){
-    var _this = this,
-        root = path.join(__dirname, 'templates'),
-        templates = _this.finder(root),
-        config = _this.storage.get();
-
-        config.filters = {}
-        config.filters.generator = this.seq[0];
+  var Generator = module.exports = function ( Utility, git, travisci) {
+    var Generator = {};
 
 
-    if(_this.args[0]){
 
-      _this.argv.name = _this.args[0];
+   Generator.index = function(done ){
+      var _this = this,
 
-    }
+          root = path.join(__dirname, 'templates'),
+          templates = _this.finder(root);
 
-    _.forEach(_this.argv, function (item, key){
+          this.storage.create('store', 'lib-config.json');
+          var config = _this.storage.get();
 
-        if (key === '_') return;
+          config.filters = {}
+          config.filters.generator = this.seq[0];
 
-        if( _.isString( item ) ){
+      if(_this.args[0]){
 
-            var array = config.filters[key] = item.split(',');
-            if(array.length > 1) return array;
+        _this.argv.name = _this.args[0];
 
-        }
-
-        config.filters[key] = item;
-
-    });
-
-    var prompts = _.filter(questions(), function (item, key){
-        if(! _this.argv[ key ] ) {
-          return item;
-        }
-    });
-
-
-    inquirer.prompt(prompts, function (answers){
-      _.assign(config.filters, answers)
-      if(answers.private) config.filters.private = answers.private.split(',');
-      if(answers.public) config.filters.public = answers.public.split(',');
-      next();
-    })
-
-    function next(){
-      config.filters.names = {
-        classed: _s.classify(config.filters.name),
-        slug:    _s.slugify(config.filters.name)
       }
-      config.filters.testPath = './test'
-      generate_module();
-      generate_test();
-    }
 
-    function generate_module(){
+      _.forEach(_this.argv, function (item, key){
 
-      gulp.src( templates[config.filters.pattern].all() )
-        .pipe( $.template( config ) )
-        .pipe( $.rename(function (file){
-            if (file.basename.indexOf('_') == 0) {
-              file.basename = file.basename.replace('_', config.filters.name);
-            }
-        }) )
-        .pipe( $.conflict( config.filters.path ) )
-        .pipe( gulp.dest( config.filters.path ) )
+          if (key === '_') return;
 
-    }
-    function generate_test(){
+          if( _.isString( item ) ){
 
-      gulp.src( templates.test.all() )
-        .pipe( $.template( config ) )
-        .pipe( $.rename(function (file){
-            if (file.basename.indexOf('_') == 0) {
-              file.basename = file.basename.replace('_', config.filters.name);
-            }
-        }) )
-        .pipe( $.conflict( config.filters.testPath ) )
-        .pipe( gulp.dest( config.filters.testPath ) )
-        .on('end', function(){
-          process.exit();
-        })
-    }
-  }
+              var array = config.filters[key] = item.split(',');
+              if(array.length > 1) return array;
+
+          }
+
+          config.filters[key] = item;
+
+      });
+
+      if(config.filters.blank){
+        config.filters.private = [];
+        _this.argv.private = [];
+        config.filters.public = [];
+        _this.argv.public = [];
+      }
+
+      var prompts = _.filter(questions(), function (item, key){
+          if(! _this.argv[ key ] ) {
+            return item;
+          }
+      });
+
+
+      inquirer.prompt(prompts, function (answers){
+        _.assign(config.filters, answers)
+        if(answers.private) config.filters.private = answers.private.split(',');
+        if(answers.public) config.filters.public = answers.public.split(',');
+        next();
+      })
+
+      function next(){
+        config.filters.names = {
+          classed: _s.classify(config.filters.name),
+          slug:    _s.slugify(config.filters.name)
+        }
+        config.filters.testPath = './test'
+        generate_module();
+        generate_test();
+      }
+
+      function generate_module(){
+        console.log(config);
+        gulp.src( templates[config.filters.pattern].all() )
+          .pipe( $.template( config ) )
+          .pipe( $.rename(function (file){
+              if (file.basename.indexOf('_') == 0) {
+                file.basename = file.basename.replace('_', config.filters.name);
+              }
+          }) )
+          .pipe( $.conflict( config.filters.path ) )
+          .pipe( gulp.dest( config.filters.path ) )
+
+      }
+      function generate_test(){
+
+        gulp.src( templates.test.all() )
+          .pipe( $.template( config ) )
+          .pipe( $.rename(function (file){
+              if (file.basename.indexOf('_') == 0) {
+                file.basename = file.basename.replace('_', config.filters.name);
+              }
+          }) )
+          .pipe( $.conflict( config.filters.testPath ) )
+          .pipe( gulp.dest( config.filters.testPath ) )
+          .on('end', function(){
+            process.exit();
+          })
+      }
+
+   }
+
+    return Generator;
+  };
+
 
 })();
+
+
+
+
+
+
