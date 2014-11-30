@@ -74,3 +74,35 @@ gulp
 
 
 
+
+
+This is a modified version of the last pull request. I the bogs that I found.
+
+In order to do so I had to restructure the code base. All your code is still there, I just separated it into separate files.
+
+If you have any problems locating thing, please let me know.
+
+NPM Installs
+gulp-storage: A Yeoman like config store, but for gulp. This stores config information in the users directory.
+gulp-finder: A Module that adds glob method to the templates directory.
+minimist: Arguments parser for the sub-generator.
+
+Created Classes
+Utility Class: Contains General purpose Utilities
+
+Created Modules
+Git: Module: Handles all git configurations
+Travis: Module: Handles all TravisCi configurations
+
+Created INDEX Generator
+The Index Generator is the primary generator for slush-lib.
+all other generators are name under the ./generators directory
+
+Each Generator has an index.js, ./templates/ dir and either a prompts.js or config.js
+
+These files break the generator up into modular components.
+You can also see the docs for how I implemented everything.
+
+If you have any questions, please let me know!
+
+JoelCox

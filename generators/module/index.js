@@ -22,8 +22,12 @@
     var Generator = {};
 
 
-
-   Generator.index = function(done ){
+    /**
+     * [index lib:module Sub-Generator]
+     * @param  {Function} done [gulp done function]
+     * @return {Stream}        [gulp stream]
+     */
+    Generator.index = function(done ){
       var _this = this,
 
           root = path.join(__dirname, 'templates'),
@@ -77,6 +81,9 @@
         next();
       })
 
+      /**
+       * [next Next function inline after the prompts]
+       */
       function next(){
         config.filters.names = {
           classed: _s.classify(config.filters.name),
@@ -87,6 +94,10 @@
         generate_test();
       }
 
+      /**
+       * [generate_module Generate node-module template]
+       * @return {Stream} [return gulp-stream]
+       */
       function generate_module(){
         console.log(config);
         gulp.src( templates[config.filters.pattern].all() )
@@ -100,6 +111,11 @@
           .pipe( gulp.dest( config.filters.path ) )
 
       }
+
+      /**
+       * [generate_test Generate node-module tests]
+       * @return {Stream} [return gulp stream]
+       */
       function generate_test(){
 
         gulp.src( templates.test.all() )

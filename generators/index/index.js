@@ -17,7 +17,13 @@
 
       Promise.longStackTraces();
 
-
+  /**
+   * [exports description]
+   * @param  {[type]} utility    [description]
+   * @param  {[type]} git        [description]
+   * @param  {[type]} TravisUtil [description]
+   * @return {[type]}            [description]
+   */
   var Lib = module.exports = function (utility, git, TravisUtil) {
     var lib = {};
 

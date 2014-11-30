@@ -1,5 +1,9 @@
 
 
+/**
+ * [Prompts for module sub-generator]
+ * @return {Object} [return Object containing all prompts]
+ */
 module.exports = function(){
     var questions = {
         name: {

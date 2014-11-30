@@ -9,14 +9,10 @@
   var utility = new Utility;
   module.exports = utility;
 
-
-
   /**
-   * [Utility description]
-   * @param  {[type]} options [description]
-   * @return {[type]}         [description]
+   * [Utility Class for General Purpose Utilities]
    */
-  function Utility( options ){
+  function Utility( ){
     var _this = this;
     _this.args = parseArgs(process.argv.slice(2));
     gulp.Gulp.prototype.argv = _this.args;
@@ -39,6 +35,11 @@
     };
   }
 
+  /**
+   * [normalize description]
+   * @param  {String} name [String to be normalized]
+   * @return {String}      [Normalized String]
+   */
   Utility.prototype.normalize = function( name ) {
 
       var chars = [];
@@ -65,14 +66,6 @@
    */
   Utility.prototype.getUserHome = function(){
     return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-  };
-  /**
-   * [init description]
-   * @param  {[type]} params [description]
-   * @return {[type]}        [description]
-   */
-  Utility.prototype.init = function( params ){
-
   };
 
 })();
