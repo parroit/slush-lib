@@ -51,7 +51,7 @@ var Utility  = require('./Utility');
 var GitUtil = require('./lib/git')
 
 /**
- * TravilUtil General Purpose Utilities for Travis Ci
+ * TravisUtil General Purpose Utilities for Travis Ci
  * @type {Object}
  *
  * @createTravisProject
