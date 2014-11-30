@@ -16,10 +16,7 @@
   "bugs": {
     "url": "https://github.com/parroit/slush-lib/issues"
   },
-  "author": {
-    "name": "Andrea Parodi",
-    "email": "andrea.parodi@ebansoftware.net"
-  },
+  "author": "Andrea Parodi <andrea.parodi@ebansoftware.net>",
   "licenses": [
     {
       "type": "MIT",
@@ -60,5 +57,8 @@
     "node": ">=0.10.26",
     "npm": ">=1.4.3"
   },
-  "readmeFilename": "README.md"
+  "directories": {
+    "test": "test"
+  },
+  "license": "ISC"
 }
