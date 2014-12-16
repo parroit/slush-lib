@@ -28,7 +28,9 @@
     "url": "git://github.com/parroit/slush-lib.git"
   },
   "main": "slushfile.js",
-  "scripts": {},
+  "scripts": {
+    "test": "mocha test/**.js --reporter spec"
+  },
   "dependencies": {
     "bluebird": "~2.2.2",
     "git-config": "0.0.6",
@@ -52,7 +54,10 @@
     "travis-ci": "^1.2.0",
     "underscore.string": "~2.3.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
+  },
   "engines": {
     "node": ">=0.10.26",
     "npm": ">=1.4.3"
